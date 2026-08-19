@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -25,8 +27,7 @@ public class Arin {
         System.out.println(banner);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int numberOfTasks = 0;
+        List<Task> tasks = new ArrayList<>();
 
         while (true) {
             String command = scanner.nextLine();
@@ -39,35 +40,38 @@ public class Arin {
                 if (command.equals("list")) {
                     System.out.println("________________________________");
                     System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < numberOfTasks; i++) {
-                        System.out.println((i + 1) + ". " + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println((i + 1) + ". " + tasks.get(i));
                     }
                     System.out.println("________________________________");
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    int taskNumber = getTaskNumber(command, "mark", numberOfTasks);
-                    tasks[taskNumber].markTask();
+                    int taskNumber = getTaskNumber(command, "mark", tasks.size());
+                    tasks.get(taskNumber).markTask();
                     System.out.println("________________________________");
                     System.out.println("Nice! I've marked this task as done:");
-                    System.out.println(tasks[taskNumber]);
+                    System.out.println(tasks.get(taskNumber));
                     System.out.println("________________________________");
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    int taskNumber = getTaskNumber(command, "unmark", numberOfTasks);
-                    tasks[taskNumber].unmarkTask();
+                    int taskNumber = getTaskNumber(command, "unmark", tasks.size());
+                    tasks.get(taskNumber).unmarkTask();
                     System.out.println("________________________________");
                     System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println(tasks[taskNumber]);
+                    System.out.println(tasks.get(taskNumber));
+                    System.out.println("________________________________");
+                } else if (command.equals("delete") || command.startsWith("delete ")) {
+                    int taskNumber = getTaskNumber(command, "delete", tasks.size());
+                    Task removedTask = tasks.remove(taskNumber);
+                    System.out.println("________________________________");
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("  " + removedTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println("________________________________");
                 } else {
-                    if (numberOfTasks == tasks.length) {
-                        throw new ArinException("Your task list is full.");
-                    }
-
                     Task task = createTask(command);
-                    tasks[numberOfTasks] = task;
-                    numberOfTasks++;
+                    tasks.add(task);
                     System.out.println("________________________________");
                     System.out.println("Got it. I've added this task:\n" + task);
-                    System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println("________________________________");
                 }
             } catch (ArinException e) {
@@ -82,6 +86,13 @@ public class Arin {
         System.out.println("________________________________");
     }
 
+    /**
+     * Creates a task from a valid task-creation command.
+     *
+     * @param command the command entered by the user
+     * @return the task represented by the command
+     * @throws ArinException if the command is unknown or missing required details
+     */
     private static Task createTask(String command) throws ArinException {
         if (command.equals("todo") || command.startsWith("todo ")) {
             String description = command.substring(4).trim();
@@ -123,9 +134,18 @@ public class Arin {
             return new Event(description, start, end);
         }
 
-        throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.");
+        throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.");
     }
 
+    /**
+     * Validates and converts the task number in a command.
+     *
+     * @param command the command entered by the user
+     * @param commandName the command's name
+     * @param numberOfTasks number of tasks currently stored
+     * @return the zero-based index of the requested task
+     * @throws ArinException if the task number is missing, invalid, or out of range
+     */
     private static int getTaskNumber(String command, String commandName, int numberOfTasks)
             throws ArinException {
         String numberText = command.substring(commandName.length()).trim();
