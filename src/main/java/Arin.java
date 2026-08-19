@@ -27,60 +27,52 @@ public class Arin {
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[100];
         int numberOfTasks = 0;
-        String description, datetime, start, end;
 
-        while (numberOfTasks < 100) {
+        while (true) {
             String command = scanner.nextLine();
 
             if (command.equals("bye")) {
                 break;
-            } else if (command.equals("list")) {
-                System.out.println("________________________________");
-                System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < numberOfTasks; i++) {
-                    System.out.println((i + 1) + ". " + tasks[i].toString());
-                }
-                System.out.println("________________________________");
-            } else if (command.startsWith("mark")) {
-                String part = command.substring(5);
-                int n = Integer.parseInt(part) - 1;
-                tasks[n].markTask();
-                System.out.println("________________________________");
-                System.out.println("Nice! I've marked this task as done:");
-                System.out.println(tasks[n].toString());
-                System.out.println("________________________________");
-            } else if (command.startsWith("unmark")) {
-                String part = command.substring(7);
-                int n = Integer.parseInt(part) - 1;
-                tasks[n].unmarkTask();
-                System.out.println("________________________________");
-                System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println(tasks[n].toString());
-                System.out.println("________________________________");
             }
 
-            else {
-                if (command.startsWith("todo")) {
-                    description = command.substring(5);
-                    tasks[numberOfTasks] = new Todo(description);
+            try {
+                if (command.equals("list")) {
+                    System.out.println("________________________________");
+                    System.out.println("Here are the tasks in your list:");
+                    for (int i = 0; i < numberOfTasks; i++) {
+                        System.out.println((i + 1) + ". " + tasks[i]);
+                    }
+                    System.out.println("________________________________");
+                } else if (command.equals("mark") || command.startsWith("mark ")) {
+                    int taskNumber = getTaskNumber(command, "mark", numberOfTasks);
+                    tasks[taskNumber].markTask();
+                    System.out.println("________________________________");
+                    System.out.println("Nice! I've marked this task as done:");
+                    System.out.println(tasks[taskNumber]);
+                    System.out.println("________________________________");
+                } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+                    int taskNumber = getTaskNumber(command, "unmark", numberOfTasks);
+                    tasks[taskNumber].unmarkTask();
+                    System.out.println("________________________________");
+                    System.out.println("OK, I've marked this task as not done yet:");
+                    System.out.println(tasks[taskNumber]);
+                    System.out.println("________________________________");
+                } else {
+                    if (numberOfTasks == tasks.length) {
+                        throw new ArinException("Your task list is full.");
+                    }
+
+                    Task task = createTask(command);
+                    tasks[numberOfTasks] = task;
+                    numberOfTasks++;
+                    System.out.println("________________________________");
+                    System.out.println("Got it. I've added this task:\n" + task);
+                    System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                    System.out.println("________________________________");
                 }
-                if (command.startsWith("deadline")) {
-                    description = command.substring(9, command.indexOf("/"));
-                    datetime = command.substring(command.indexOf("/")+4);
-                    tasks[numberOfTasks] = new Deadline(description, datetime);
-                }
-                if (command.startsWith("event")) {
-                    int first = command.indexOf("/");
-                    int second = command.indexOf("/", first+1);
-                    description = command.substring(6, first);
-                    start = command.substring(first+6, second-1);
-                    end = command.substring(second+4);
-                    tasks[numberOfTasks] = new Event(description, start, end);
-                }
+            } catch (ArinException e) {
                 System.out.println("________________________________");
-                System.out.println("Got it. I've added this task:\n" + tasks[numberOfTasks].toString());
-                numberOfTasks++;
-                System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                System.out.println("Oops! " + e.getMessage());
                 System.out.println("________________________________");
             }
         }
@@ -88,5 +80,63 @@ public class Arin {
         System.out.println("________________________________");
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println("________________________________");
+    }
+
+    private static Task createTask(String command) throws ArinException {
+        if (command.equals("todo") || command.startsWith("todo ")) {
+            String description = command.substring(4).trim();
+            if (description.isEmpty()) {
+                throw new ArinException("Please include a description after 'todo'.");
+            }
+            return new Todo(description);
+        }
+
+        if (command.equals("deadline") || command.startsWith("deadline ")) {
+            String details = command.substring(8).trim();
+            int byIndex = details.indexOf(" /by ");
+            if (byIndex == -1) {
+                throw new ArinException("Use: deadline <description> /by <date and time>.");
+            }
+
+            String description = details.substring(0, byIndex).trim();
+            String datetime = details.substring(byIndex + 5).trim();
+            if (description.isEmpty() || datetime.isEmpty()) {
+                throw new ArinException("A deadline needs both a description and a due date.");
+            }
+            return new Deadline(description, datetime);
+        }
+
+        if (command.equals("event") || command.startsWith("event ")) {
+            String details = command.substring(5).trim();
+            int fromIndex = details.indexOf(" /from ");
+            int toIndex = details.indexOf(" /to ");
+            if (fromIndex == -1 || toIndex == -1 || toIndex < fromIndex) {
+                throw new ArinException("Use: event <description> /from <start> /to <end>.");
+            }
+
+            String description = details.substring(0, fromIndex).trim();
+            String start = details.substring(fromIndex + 7, toIndex).trim();
+            String end = details.substring(toIndex + 5).trim();
+            if (description.isEmpty() || start.isEmpty() || end.isEmpty()) {
+                throw new ArinException("An event needs a description, start time, and end time.");
+            }
+            return new Event(description, start, end);
+        }
+
+        throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.");
+    }
+
+    private static int getTaskNumber(String command, String commandName, int numberOfTasks)
+            throws ArinException {
+        String numberText = command.substring(commandName.length()).trim();
+        try {
+            int taskNumber = Integer.parseInt(numberText);
+            if (taskNumber < 1 || taskNumber > numberOfTasks) {
+                throw new ArinException("There is no task numbered " + numberText + ".");
+            }
+            return taskNumber - 1;
+        } catch (NumberFormatException e) {
+            throw new ArinException("Use: " + commandName + " <task number>.");
+        }
     }
 }
