@@ -25,16 +25,31 @@ public class Arin {
         System.out.println(banner);
 
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        String[] tasks = new String[100];
+        int numberOfTasks = 0;
+
+        while (numberOfTasks < 100) {
             String command = scanner.nextLine();
 
             if (command.equals("bye")) {
                 break;
+            } else if (command.equals("list")) {
+                System.out.println("________________________________");
+                System.out.println("Here are the tasks in your list:");
+                for (int i = 0; i < numberOfTasks; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+                System.out.println("________________________________");
             }
 
-            System.out.println("________________________________");
-            System.out.println("    " + command);
-            System.out.println("________________________________");
+            else {
+                tasks[numberOfTasks] = command;
+                numberOfTasks++;
+                System.out.println("________________________________");
+                System.out.println("added: " + command);
+                System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                System.out.println("________________________________");
+            }
         }
 
         System.out.println("________________________________");
