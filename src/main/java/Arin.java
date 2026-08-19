@@ -27,6 +27,7 @@ public class Arin {
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[100];
         int numberOfTasks = 0;
+        String description, datetime, start, end;
 
         while (numberOfTasks < 100) {
             String command = scanner.nextLine();
@@ -59,9 +60,25 @@ public class Arin {
             }
 
             else {
-                tasks[numberOfTasks] = new Task(command);
+                if (command.startsWith("todo")) {
+                    description = command.substring(5);
+                    tasks[numberOfTasks] = new Todo(description);
+                }
+                if (command.startsWith("deadline")) {
+                    description = command.substring(9, command.indexOf("/"));
+                    datetime = command.substring(command.indexOf("/")+4);
+                    tasks[numberOfTasks] = new Deadline(description, datetime);
+                }
+                if (command.startsWith("event")) {
+                    int first = command.indexOf("/");
+                    int second = command.indexOf("/", first+1);
+                    description = command.substring(6, first);
+                    start = command.substring(first+6, second-1);
+                    end = command.substring(second+4);
+                    tasks[numberOfTasks] = new Event(description, start, end);
+                }
                 System.out.println("________________________________");
-                System.out.println("added: " + command);
+                System.out.println("Got it. I've added this task:\n" + tasks[numberOfTasks].toString());
                 numberOfTasks++;
                 System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
                 System.out.println("________________________________");
