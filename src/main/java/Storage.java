@@ -55,18 +55,6 @@ public class Storage {
      * @return formatted task line
      */
     private String formatTask(Task task) {
-        String completed = task.isDone() ? "1" : "0";
-
-        if (task instanceof Todo) {
-            return "T | " + completed + " | " + task.getDescription();
-        }
-        if (task instanceof Deadline deadline) {
-            return "D | " + completed + " | " + deadline.getDescription()
-                    + " | " + deadline.getDatetime();
-        }
-
-        Event event = (Event) task;
-        return "E | " + completed + " | " + event.getDescription()
-                + " | " + event.getStart() + " | " + event.getEnd();
+        return task.storageToString();
     }
 }

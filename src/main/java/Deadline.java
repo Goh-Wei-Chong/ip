@@ -8,13 +8,9 @@ public class Deadline extends Task {
         this.datetime = datetime;
     }
 
-    /**
-     * Returns the deadline text used when saving this task.
-     *
-     * @return the deadline text
-     */
-    public String getDatetime() {
-        return datetime;
+    @Override
+    public String storageToString() {
+        return "D" + super.storageToString() + " | " + this.datetime;
     }
 
     @Override

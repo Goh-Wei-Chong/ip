@@ -10,22 +10,9 @@ public class Event extends Task {
         this.end = end;
     }
 
-    /**
-     * Returns the event start text used when saving this task.
-     *
-     * @return the event start text
-     */
-    public String getStart() {
-        return start;
-    }
-
-    /**
-     * Returns the event end text used when saving this task.
-     *
-     * @return the event end text
-     */
-    public String getEnd() {
-        return end;
+    @Override
+    public String storageToString() {
+        return "E" + super.storageToString() + " | " + this.start + " " + this.end;
     }
 
     @Override

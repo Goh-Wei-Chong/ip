@@ -11,32 +11,19 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
-    }
-
-    /**
-     * Returns the description used when saving this task.
-     *
-     * @return this task's description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Returns whether this task has been completed.
-     *
-     * @return true if this task is complete
-     */
-    public boolean isDone() {
-        return isDone;
+        return (isDone ? "X" : " ");
     }
 
     public void markTask() {
         this.isDone = true;
     }
+
     public void unmarkTask() {
         this.isDone = false;
+    }
+
+    public String storageToString() {
+        return " | " + this.getStatusIcon() + " | " + this.description;
     }
 
     @Override
