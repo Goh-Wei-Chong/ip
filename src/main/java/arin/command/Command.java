@@ -15,11 +15,11 @@ public abstract class Command {
     /**
      * Performs this command using Arin's current collaborators.
      *
-     * @param tasks current tasks
-     * @param ui user interface for feedback
-     * @param storage persistent task storage
-     * @throws ArinException if command execution cannot be completed
-     * @throws IOException if saving task data fails
+     * @param tasks Current tasks.
+     * @param ui User interface for feedback.
+     * @param storage Persistent task storage.
+     * @throws ArinException If command execution cannot be completed.
+     * @throws IOException If saving task data fails.
      */
     public abstract void execute(List<Task> tasks, Ui ui, Storage storage)
             throws ArinException, IOException;
@@ -27,7 +27,7 @@ public abstract class Command {
     /**
      * Returns whether this command ends Arin's main loop.
      *
-     * @return false for ordinary commands
+     * @return {@code false} for ordinary commands.
      */
     public boolean isExit() {
         return false;

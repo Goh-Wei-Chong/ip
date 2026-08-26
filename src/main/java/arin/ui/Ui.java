@@ -25,8 +25,8 @@ public class Ui {
     /**
      * Creates a UI with specified input and output streams.
      *
-     * @param scanner source of user commands
-     * @param output destination for messages
+     * @param scanner Source of user commands.
+     * @param output Destination for messages.
      */
     public Ui(Scanner scanner, PrintStream output) {
         this.scanner = scanner;
@@ -53,7 +53,7 @@ public class Ui {
     /**
      * Reads one complete command entered by the user.
      *
-     * @return the entered command
+     * @return The entered command.
      */
     public String readCommand() {
         return scanner.nextLine();
@@ -62,7 +62,7 @@ public class Ui {
     /**
      * Displays all tasks with their one-based positions.
      *
-     * @param tasks tasks to display
+     * @param tasks Tasks to display.
      */
     public void showTaskList(List<Task> tasks) {
         output.println(DIVIDER);
@@ -73,17 +73,30 @@ public class Ui {
         output.println(DIVIDER);
     }
 
-    /** Displays confirmation that a task was marked complete. */
+    /**
+     * Displays confirmation that a task was marked complete.
+     *
+     * @param task Completed task to display.
+     */
     public void showMarkedTask(Task task) {
         showTaskMessage("Nice! I've marked this task as done:", task);
     }
 
-    /** Displays confirmation that a task was marked incomplete. */
+    /**
+     * Displays confirmation that a task was marked incomplete.
+     *
+     * @param task Incomplete task to display.
+     */
     public void showUnmarkedTask(Task task) {
         showTaskMessage("OK, I've marked this task as not done yet:", task);
     }
 
-    /** Displays confirmation that a task was added. */
+    /**
+     * Displays confirmation that a task was added.
+     *
+     * @param task Added task to display.
+     * @param taskCount Number of tasks after the addition.
+     */
     public void showAddedTask(Task task, int taskCount) {
         output.println(DIVIDER);
         output.println("Got it. I've added this task:");
@@ -92,7 +105,12 @@ public class Ui {
         output.println(DIVIDER);
     }
 
-    /** Displays confirmation that a task was deleted. */
+    /**
+     * Displays confirmation that a task was deleted.
+     *
+     * @param task Deleted task to display.
+     * @param taskCount Number of tasks after the deletion.
+     */
     public void showDeletedTask(Task task, int taskCount) {
         output.println(DIVIDER);
         output.println("Noted. I've removed this task:");
@@ -101,21 +119,32 @@ public class Ui {
         output.println(DIVIDER);
     }
 
-    /** Displays an error message to the user. */
+    /**
+     * Displays an error message to the user.
+     *
+     * @param message Error message to display.
+     */
     public void showError(String message) {
         output.println(DIVIDER);
         output.println("Oops! " + message);
         output.println(DIVIDER);
     }
 
-    /** Displays Arin's goodbye message. */
+    /**
+     * Displays Arin's goodbye message.
+     */
     public void showGoodbye() {
         output.println(DIVIDER);
         output.println("Bye. Hope to see you again soon!");
         output.println(DIVIDER);
     }
 
-    /** Displays a task message surrounded by the standard divider. */
+    /**
+     * Displays a task message surrounded by the standard divider.
+     *
+     * @param message Message to display.
+     * @param task Task to display.
+     */
     private void showTaskMessage(String message, Task task) {
         output.println(DIVIDER);
         output.println(message);

@@ -7,7 +7,7 @@ public class ArinException extends Exception {
     /**
      * Creates an exception with a message that can be shown to the user.
      *
-     * @param message explanation of the invalid command
+     * @param message Explanation of the invalid command.
      */
     public ArinException(String message) {
         super(message);

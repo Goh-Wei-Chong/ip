@@ -25,9 +25,9 @@ public class Storage {
 
     /**
      * Creates storage that saves tasks at a specified path.
-     * This constructor makes the writing behaviour straightforward to test.
+     * This constructor makes the writing behavior straightforward to test.
      *
-     * @param filePath path of the task file
+     * @param filePath Path of the task file.
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
@@ -36,8 +36,8 @@ public class Storage {
     /**
      * Saves all tasks, replacing the previously saved list.
      *
-     * @param tasks tasks to save
-     * @throws IOException if the task file cannot be written
+     * @param tasks Tasks to save.
+     * @throws IOException If the task file cannot be written.
      */
     public void saveTasks(List<Task> tasks) throws IOException {
         Path parentDirectory = filePath.getParent();
@@ -55,8 +55,8 @@ public class Storage {
     /**
      * Converts a task to one line of the Level 7 storage format.
      *
-     * @param task task to format
-     * @return formatted task line
+     * @param task Task to format.
+     * @return Formatted task line.
      */
     private String formatTask(Task task) {
         return task.storageToString();

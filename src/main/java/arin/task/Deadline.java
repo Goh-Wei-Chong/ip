@@ -16,8 +16,8 @@ public class Deadline extends Task {
     /**
      * Creates a deadline task with a calendar date.
      *
-     * @param description description of the task
-     * @param date deadline date
+     * @param description Description of the task.
+     * @param date Deadline date.
      */
     public Deadline(String description, LocalDate date) {
         super(description);
@@ -27,7 +27,7 @@ public class Deadline extends Task {
     /**
      * Returns this deadline in the storage-file format, including its ISO date.
      *
-     * @return storage text prefixed with the deadline task type and date
+     * @return Storage text prefixed with the deadline task type and date.
      */
     @Override
     public String storageToString() {
@@ -37,7 +37,7 @@ public class Deadline extends Task {
     /**
      * Returns this deadline in the display format, including its formatted date.
      *
-     * @return display text prefixed with the deadline task type and date
+     * @return Display text prefixed with the deadline task type and date.
      */
     @Override
     public String toString() {
