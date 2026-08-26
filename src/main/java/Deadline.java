@@ -1,8 +1,16 @@
+/**
+ * Represents a task that must be completed by a specified date and time.
+ */
 public class Deadline extends Task {
-    private String datetime;
+    private final String datetime;
     public Deadline(String description, String datetime) {
         super(description);
         this.datetime = datetime;
+    }
+
+    @Override
+    public String storageToString() {
+        return "D" + super.storageToString() + " | " + this.datetime;
     }
 
     @Override
