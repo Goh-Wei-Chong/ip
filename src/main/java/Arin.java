@@ -19,15 +19,16 @@ public class Arin {
         List<Task> tasks = new ArrayList<>();
         Storage storage = new Storage();
 
-        while (true) {
+        boolean isExit = false;
+        while (!isExit) {
             String command = ui.readCommand();
 
-            if (command.equals("bye")) {
-                break;
-            }
-
             try {
-                if (command.equals("list")) {
+                if (command.equals("bye")) {
+                    Command exitCommand = new ExitCommand();
+                    exitCommand.execute(tasks, ui, storage);
+                    isExit = exitCommand.isExit();
+                } else if (command.equals("list")) {
                     ui.showTaskList(tasks);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskNumber = getTaskNumber(command, "mark", tasks.size());
@@ -54,8 +55,6 @@ public class Arin {
                 ui.showError(e.getMessage());
             }
         }
-
-        ui.showGoodbye();
     }
 
     /**
