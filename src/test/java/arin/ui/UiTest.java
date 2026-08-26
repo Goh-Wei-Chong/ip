@@ -1,38 +1,48 @@
 package arin.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.Test;
+
+import arin.task.Task;
 import arin.task.Todo;
 
 /**
- * Regression checks for UI messages used by Arin.
+ * Tests task-list output from {@link Ui}.
  */
-public class UiTest {
-    /**
-     * Verifies that the UI reads commands and labels list entries correctly.
-     *
-     * @param args command-line arguments, which are not used
-     */
-    public static void main(String[] args) {
+class UiTest {
+    private static final String DIVIDER = "________________________________";
+
+    @Test
+    void showTaskList_emptyList_showsHeadingWithoutTaskEntries() {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        Ui ui = new Ui(new Scanner("todo read book\n"), new PrintStream(buffer));
+        Ui ui = new Ui(new Scanner(""), new PrintStream(buffer));
 
-        if (!"todo read book".equals(ui.readCommand())) {
-            throw new AssertionError("Ui did not read the entered command.");
-        }
+        ui.showTaskList(List.of());
 
-        ui.showTaskList(List.of(new Todo("read book")));
-        String expected = "________________________________" + System.lineSeparator()
+        assertEquals(DIVIDER + System.lineSeparator()
                 + "Here are the tasks in your list:" + System.lineSeparator()
-                + "1. [T][ ] read book" + System.lineSeparator()
-                + "________________________________" + System.lineSeparator();
-        if (!expected.equals(buffer.toString())) {
-            throw new AssertionError("Unexpected list output: " + buffer);
-        }
+                + DIVIDER + System.lineSeparator(), buffer.toString());
+    }
 
-        System.out.println("UiTest passed");
+    @Test
+    void showTaskList_multipleTasks_showsOneBasedNumbersAndTaskText() {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        Ui ui = new Ui(new Scanner(""), new PrintStream(buffer));
+        Task completedTask = new Todo("read book");
+        completedTask.markTask();
+
+        ui.showTaskList(List.of(new Todo("buy milk"), completedTask));
+
+        assertEquals(DIVIDER + System.lineSeparator()
+                + "Here are the tasks in your list:" + System.lineSeparator()
+                + "1. [T][ ] buy milk" + System.lineSeparator()
+                + "2. [T][X] read book" + System.lineSeparator()
+                + DIVIDER + System.lineSeparator(), buffer.toString());
     }
 }

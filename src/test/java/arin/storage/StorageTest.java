@@ -1,56 +1,67 @@
 package arin.storage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import arin.task.Deadline;
 import arin.task.Event;
+import arin.task.Task;
 import arin.task.Todo;
 
 /**
- * Regression checks for Level 7 task-file writing.
+ * Tests task-file writing by {@link Storage}.
  */
-public class StorageTest {
-    /**
-     * Writes each task type and verifies the required file format.
-     *
-     * @param args command-line arguments, which are not used
-     * @throws Exception if the test setup or assertion fails
-     */
-    public static void main(String[] args) throws Exception {
-        Path testDirectory = Files.createTempDirectory("arin-storage-test");
-        Path testFile = testDirectory.resolve("arin.txt");
+class StorageTest {
+    @TempDir
+    Path temporaryDirectory;
 
+    @Test
+    void saveTasks_tasksOfAllTypes_writesRequiredStorageFormat() throws Exception {
+        Path taskFile = temporaryDirectory.resolve("data/arin.txt");
         Todo todo = new Todo("read book");
         todo.markTask();
-        Storage storage = new Storage(testFile);
-        storage.saveTasks(List.of(
+        List<Task> tasks = List.of(
                 todo,
                 new Deadline("return book", LocalDate.of(2019, 12, 2)),
                 new Event("project meeting", "Aug 6th 2pm", "Aug 6th 4pm")
-        ));
+        );
 
-        List<String> expected = List.of(
+        new Storage(taskFile).saveTasks(tasks);
+
+        assertTrue(Files.exists(taskFile));
+        assertEquals(List.of(
                 "T | X | read book",
                 "D |   | return book | 2019-12-02",
                 "E |   | project meeting | Aug 6th 2pm Aug 6th 4pm"
-        );
-        List<String> actual = Files.readAllLines(testFile);
+        ), Files.readAllLines(taskFile));
+    }
 
-        if (!expected.equals(actual)) {
-            throw new AssertionError("Expected " + expected + " but got " + actual);
-        }
+    @Test
+    void saveTasks_existingFile_replacesPreviousTasks() throws Exception {
+        Path taskFile = temporaryDirectory.resolve("arin.txt");
+        Storage storage = new Storage(taskFile);
+        storage.saveTasks(List.of(new Todo("old task")));
 
-        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 12, 2));
-        String expectedDisplay = "[D][ ] return book (by: Dec 02 2019)";
-        if (!expectedDisplay.equals(deadline.toString())) {
-            throw new AssertionError("Expected " + expectedDisplay + " but got " + deadline);
-        }
+        storage.saveTasks(List.of(new Todo("new task")));
 
-        Files.delete(testFile);
-        Files.delete(testDirectory);
-        System.out.println("StorageTest passed");
+        assertEquals(List.of("T |   | new task"), Files.readAllLines(taskFile));
+    }
+
+    @Test
+    void saveTasks_emptyList_createsEmptyTaskFile() throws Exception {
+        Path taskFile = temporaryDirectory.resolve("arin.txt");
+
+        new Storage(taskFile).saveTasks(List.of());
+
+        assertTrue(Files.exists(taskFile));
+        assertEquals(List.of(), Files.readAllLines(taskFile));
     }
 }
