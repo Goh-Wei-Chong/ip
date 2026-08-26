@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -21,19 +22,25 @@ public class StorageTest {
         Storage storage = new Storage(testFile);
         storage.saveTasks(List.of(
                 todo,
-                new Deadline("return book", "June 6th"),
+                new Deadline("return book", LocalDate.of(2019, 12, 2)),
                 new Event("project meeting", "Aug 6th 2pm", "Aug 6th 4pm")
         ));
 
         List<String> expected = List.of(
-                "T | 1 | read book",
-                "D | 0 | return book | June 6th",
-                "E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm"
+                "T | X | read book",
+                "D |   | return book | 2019-12-02",
+                "E |   | project meeting | Aug 6th 2pm Aug 6th 4pm"
         );
         List<String> actual = Files.readAllLines(testFile);
 
         if (!expected.equals(actual)) {
             throw new AssertionError("Expected " + expected + " but got " + actual);
+        }
+
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 12, 2));
+        String expectedDisplay = "[D][ ] return book (by: Dec 02 2019)";
+        if (!expectedDisplay.equals(deadline.toString())) {
+            throw new AssertionError("Expected " + expectedDisplay + " but got " + deadline);
         }
 
         Files.delete(testFile);

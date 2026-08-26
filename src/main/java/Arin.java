@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -116,11 +118,17 @@ public class Arin {
             }
 
             String description = details.substring(0, byIndex).trim();
-            String datetime = details.substring(byIndex + 5).trim();
-            if (description.isEmpty() || datetime.isEmpty()) {
+            String dateText = details.substring(byIndex + 5).trim();
+            if (description.isEmpty() || dateText.isEmpty()) {
                 throw new ArinException("A deadline needs both a description and a due date.");
             }
-            return new Deadline(description, datetime);
+
+            try {
+                LocalDate date = LocalDate.parse(dateText);
+                return new Deadline(description, date);
+            } catch (DateTimeParseException e) {
+                throw new ArinException("Please use the date format yyyy-MM-dd, for example 2019-10-15.");
+            }
         }
 
         if (command.equals("event") || command.startsWith("event ")) {
