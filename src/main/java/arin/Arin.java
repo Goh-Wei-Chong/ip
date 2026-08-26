@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import arin.command.Command;
 import arin.command.ExitCommand;
@@ -57,6 +58,12 @@ public class Arin {
                     Task removedTask = tasks.remove(taskNumber);
                     storage.saveTasks(tasks);
                     ui.showDeletedTask(removedTask, tasks.size());
+                } else if (command.equals("find") || command.startsWith("find ")) {
+                    String keyword = command.substring("find".length()).trim();
+                    if (keyword.isEmpty()) {
+                        throw new ArinException("Use: find <keyword>.");
+                    }
+                    ui.showMatchingTasks(findTasks(tasks, keyword));
                 } else {
                     Task task = createTask(command);
                     tasks.add(task);
@@ -124,7 +131,25 @@ public class Arin {
         }
 
         throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, "
-                + "delete, or bye.");
+                + "delete, find, or bye.");
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the keyword, ignoring letter case.
+     *
+     * @param tasks Tasks to search.
+     * @param keyword Keyword to find in task descriptions.
+     * @return Tasks whose descriptions contain the keyword.
+     */
+    static List<Task> findTasks(List<Task> tasks, String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+        String lowercaseKeyword = keyword.toLowerCase(Locale.ROOT);
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(lowercaseKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
     }
 
     /**
