@@ -1,6 +1,10 @@
+package arin.ui;
+
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
+
+import arin.task.Task;
 
 /**
  * Handles all console input and output for Arin.

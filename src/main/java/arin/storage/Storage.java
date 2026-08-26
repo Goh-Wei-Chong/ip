@@ -1,8 +1,12 @@
+package arin.storage;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import arin.task.Task;
 
 /**
  * Saves Arin's task list to a text file.

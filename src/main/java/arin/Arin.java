@@ -1,8 +1,20 @@
+package arin;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import arin.command.Command;
+import arin.command.ExitCommand;
+import arin.exception.ArinException;
+import arin.storage.Storage;
+import arin.task.Deadline;
+import arin.task.Event;
+import arin.task.Task;
+import arin.task.Todo;
+import arin.ui.Ui;
 
 /**
  * A chatbot that echoes commands until the user ends the conversation.

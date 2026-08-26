@@ -1,7 +1,11 @@
+package arin.ui;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
+
+import arin.task.Todo;
 
 /**
  * Regression checks for UI messages used by Arin.

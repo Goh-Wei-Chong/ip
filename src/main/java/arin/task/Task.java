@@ -1,3 +1,5 @@
+package arin.task;
+
 /**
  * Represents a task tracked by Arin.
  */

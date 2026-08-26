@@ -1,7 +1,12 @@
+package arin.command;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
+
+import arin.storage.Storage;
+import arin.ui.Ui;
 
 /**
  * Regression checks for the exit command.

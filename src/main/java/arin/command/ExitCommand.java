@@ -1,4 +1,10 @@
+package arin.command;
+
 import java.util.List;
+
+import arin.storage.Storage;
+import arin.task.Task;
+import arin.ui.Ui;
 
 /**
  * Ends Arin after showing its goodbye message.

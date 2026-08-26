@@ -1,5 +1,12 @@
+package arin.command;
+
 import java.io.IOException;
 import java.util.List;
+
+import arin.exception.ArinException;
+import arin.storage.Storage;
+import arin.task.Task;
+import arin.ui.Ui;
 
 /**
  * Represents an instruction that can be executed by Arin.
