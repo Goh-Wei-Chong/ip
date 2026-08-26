@@ -24,11 +24,21 @@ public class Deadline extends Task {
         this.date = date;
     }
 
+    /**
+     * Returns this deadline in the storage-file format, including its ISO date.
+     *
+     * @return storage text prefixed with the deadline task type and date
+     */
     @Override
     public String storageToString() {
         return "D" + super.storageToString() + " | " + date;
     }
 
+    /**
+     * Returns this deadline in the display format, including its formatted date.
+     *
+     * @return display text prefixed with the deadline task type and date
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + date.format(DISPLAY_FORMAT) + ")";
