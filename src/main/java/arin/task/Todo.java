@@ -7,7 +7,7 @@ public class Todo extends Task {
     /**
      * Creates a to-do task with no associated date or time.
      *
-     * @param description text describing the task
+     * @param description Text describing the task.
      */
     public Todo(String description) {
         super(description);
@@ -16,7 +16,7 @@ public class Todo extends Task {
     /**
      * Returns this to-do task in the storage-file format.
      *
-     * @return storage text prefixed with the to-do task type
+     * @return Storage text prefixed with the to-do task type.
      */
     @Override
     public String storageToString() {
@@ -26,7 +26,7 @@ public class Todo extends Task {
     /**
      * Returns this to-do task in the display format.
      *
-     * @return display text prefixed with the to-do task type
+     * @return Display text prefixed with the to-do task type.
      */
     @Override
     public String toString() {

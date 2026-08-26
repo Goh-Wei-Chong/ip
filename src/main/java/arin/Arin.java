@@ -23,7 +23,7 @@ public class Arin {
     /**
      * Starts Arin and processes commands from standard input.
      *
-     * @param args command-line arguments, which are not used
+     * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         Ui ui = new Ui();
@@ -72,9 +72,9 @@ public class Arin {
     /**
      * Creates a task from a valid task-creation command.
      *
-     * @param command the command entered by the user
-     * @return the task represented by the command
-     * @throws ArinException if the command is unknown or missing required details
+     * @param command Command entered by the user.
+     * @return Task represented by the command.
+     * @throws ArinException If the command is unknown or missing required details.
      */
     private static Task createTask(String command) throws ArinException {
         if (command.equals("todo") || command.startsWith("todo ")) {
@@ -123,17 +123,18 @@ public class Arin {
             return new Event(description, start, end);
         }
 
-        throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.");
+        throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, "
+                + "delete, or bye.");
     }
 
     /**
      * Validates and converts the task number in a command.
      *
-     * @param command the command entered by the user
-     * @param commandName the command's name
-     * @param numberOfTasks number of tasks currently stored
-     * @return the zero-based index of the requested task
-     * @throws ArinException if the task number is missing, invalid, or out of range
+     * @param command Command entered by the user.
+     * @param commandName Command's name.
+     * @param numberOfTasks Number of tasks currently stored.
+     * @return Zero-based index of the requested task.
+     * @throws ArinException If the task number is missing, invalid, or out of range.
      */
     private static int getTaskNumber(String command, String commandName, int numberOfTasks)
             throws ArinException {

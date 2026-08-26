@@ -13,9 +13,9 @@ public class ExitCommand extends Command {
     /**
      * Displays Arin's goodbye message. This command does not change task data.
      *
-     * @param tasks current tasks, which are not changed
-     * @param ui user interface for feedback
-     * @param storage persistent task storage, which is not changed
+     * @param tasks Current tasks, which are not changed.
+     * @param ui User interface for feedback.
+     * @param storage Persistent task storage, which is not changed.
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) {
@@ -25,7 +25,7 @@ public class ExitCommand extends Command {
     /**
      * Signals that Arin should stop reading commands.
      *
-     * @return true
+     * @return {@code true}.
      */
     @Override
     public boolean isExit() {

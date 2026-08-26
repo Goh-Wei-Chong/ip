@@ -10,7 +10,7 @@ public class Task {
     /**
      * Creates an incomplete task with the specified description.
      *
-     * @param description text describing the task
+     * @param description Text describing the task.
      */
     public Task(String description) {
         this.description = description;
@@ -20,18 +20,22 @@ public class Task {
     /**
      * Returns the symbol used to display this task's completion state.
      *
-     * @return {@code X} when complete, or a space when incomplete
+     * @return {@code X} when complete, or a space when incomplete.
      */
     public String getStatusIcon() {
         return (isDone ? "X" : " ");
     }
 
-    /** Marks this task as complete. */
+    /**
+     * Marks this task as complete.
+     */
     public void markTask() {
         this.isDone = true;
     }
 
-    /** Marks this task as incomplete. */
+    /**
+     * Marks this task as incomplete.
+     */
     public void unmarkTask() {
         this.isDone = false;
     }
@@ -39,7 +43,7 @@ public class Task {
     /**
      * Converts this task into its common storage-file representation.
      *
-     * @return storage text containing the completion state and description
+     * @return Storage text containing the completion state and description.
      */
     public String storageToString() {
         return " | " + this.getStatusIcon() + " | " + this.description;
@@ -48,7 +52,7 @@ public class Task {
     /**
      * Returns the task text shown to the user.
      *
-     * @return formatted task description and completion state
+     * @return Formatted task description and completion state.
      */
     @Override
     public String toString() {
