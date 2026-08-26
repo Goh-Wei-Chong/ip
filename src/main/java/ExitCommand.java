@@ -1,0 +1,28 @@
+import java.util.List;
+
+/**
+ * Ends Arin after showing its goodbye message.
+ */
+public class ExitCommand extends Command {
+    /**
+     * Displays Arin's goodbye message. This command does not change task data.
+     *
+     * @param tasks current tasks, which are not changed
+     * @param ui user interface for feedback
+     * @param storage persistent task storage, which is not changed
+     */
+    @Override
+    public void execute(List<Task> tasks, Ui ui, Storage storage) {
+        ui.showGoodbye();
+    }
+
+    /**
+     * Signals that Arin should stop reading commands.
+     *
+     * @return true
+     */
+    @Override
+    public boolean isExit() {
+        return true;
+    }
+}

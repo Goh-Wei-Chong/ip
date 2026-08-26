@@ -3,7 +3,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * A chatbot that echoes commands until the user ends the conversation.
@@ -15,83 +14,47 @@ public class Arin {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        String banner = "________________________________\n" +
-                "    _         _       \n" +
-                "   / \\   _ __(_)_ __  \n" +
-                "  / _ \\ | '__| | '_ \\ \n" +
-                " / ___ \\| |  | | | | |\n" +
-                "/_/   \\_\\_|  |_|_| |_|\n" +
-                "Good afternoon.\n"
-                + "My name is Arin.\n"
-                + "And I am a Wilderness Explorer in Tribe 54, Sweat Lodge 12.\n"
-                + "Are you in need of any assistance today, sir?\n" +
-                "________________________________";
-
-        System.out.println(banner);
-
-        Scanner scanner = new Scanner(System.in);
+        Ui ui = new Ui();
+        ui.showWelcome();
         List<Task> tasks = new ArrayList<>();
         Storage storage = new Storage();
 
-        while (true) {
-            String command = scanner.nextLine();
-
-            if (command.equals("bye")) {
-                break;
-            }
+        boolean isExit = false;
+        while (!isExit) {
+            String command = ui.readCommand();
 
             try {
-                if (command.equals("list")) {
-                    System.out.println("________________________________");
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println((i + 1) + ". " + tasks.get(i));
-                    }
-                    System.out.println("________________________________");
+                if (command.equals("bye")) {
+                    Command exitCommand = new ExitCommand();
+                    exitCommand.execute(tasks, ui, storage);
+                    isExit = exitCommand.isExit();
+                } else if (command.equals("list")) {
+                    ui.showTaskList(tasks);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskNumber = getTaskNumber(command, "mark", tasks.size());
                     tasks.get(taskNumber).markTask();
                     storage.saveTasks(tasks);
-                    System.out.println("________________________________");
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println(tasks.get(taskNumber));
-                    System.out.println("________________________________");
+                    ui.showMarkedTask(tasks.get(taskNumber));
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     int taskNumber = getTaskNumber(command, "unmark", tasks.size());
                     tasks.get(taskNumber).unmarkTask();
                     storage.saveTasks(tasks);
-                    System.out.println("________________________________");
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println(tasks.get(taskNumber));
-                    System.out.println("________________________________");
+                    ui.showUnmarkedTask(tasks.get(taskNumber));
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     int taskNumber = getTaskNumber(command, "delete", tasks.size());
                     Task removedTask = tasks.remove(taskNumber);
                     storage.saveTasks(tasks);
-                    System.out.println("________________________________");
-                    System.out.println("Noted. I've removed this task:");
-                    System.out.println("  " + removedTask);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-                    System.out.println("________________________________");
+                    ui.showDeletedTask(removedTask, tasks.size());
                 } else {
                     Task task = createTask(command);
                     tasks.add(task);
                     storage.saveTasks(tasks);
-                    System.out.println("________________________________");
-                    System.out.println("Got it. I've added this task:\n" + task);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-                    System.out.println("________________________________");
+                    ui.showAddedTask(task, tasks.size());
                 }
             } catch (ArinException | IOException e) {
-                System.out.println("________________________________");
-                System.out.println("Oops! " + e.getMessage());
-                System.out.println("________________________________");
+                ui.showError(e.getMessage());
             }
         }
-
-        System.out.println("________________________________");
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println("________________________________");
     }
 
     /**
