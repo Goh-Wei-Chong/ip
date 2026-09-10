@@ -1,5 +1,6 @@
 package arin.task;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -33,5 +34,15 @@ class TaskAssertionsTest {
     void constructor_invalidEventEnd_throwsAssertionError() {
         assertThrows(AssertionError.class, () -> new Event("meeting", "2pm", null));
         assertThrows(AssertionError.class, () -> new Event("meeting", "2pm", " "));
+    }
+
+    @Test
+    void constructor_unicodeWhitespace_preservesParserValidationRules() {
+        // The parser uses trim(), which retains the Unicode em space.
+        String emSpace = "\u2003";
+
+        assertEquals(emSpace, new Todo(emSpace).getDescription());
+        assertEquals("[E][ ] meeting (from: " + emSpace + " to: " + emSpace + ")",
+                new Event("meeting", emSpace, emSpace).toString());
     }
 }
