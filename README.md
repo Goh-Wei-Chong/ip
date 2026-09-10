@@ -23,3 +23,32 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Building and running the JAR
+
+Use JDK 25 to build the project. From the project root, run:
+
+```bash
+./gradlew shadowJar
+```
+
+On Windows, use `gradlew.bat shadowJar`. The
+[Shadow JAR task](https://se-education.org/guides/tutorials/gradle.html#creating-jar-files)
+creates `build/libs/arin-all.jar` with the JavaFX dependencies included.
+Use this bundled JAR for distribution; the ordinary `jar` task does not
+include those dependencies. To force a fresh build, add `--rerun-tasks`.
+
+Run the generated JAR with Java 25:
+
+```bash
+java -jar build/libs/arin-all.jar
+```
+
+The application opens a JavaFX window displaying `Hello World!`.
+JavaFX does not need to be installed separately, but Java 25 is required.
+
+The JAR includes JavaFX native libraries for x86-64 Windows and Linux,
+plus one macOS architecture selected from the Java runtime running Gradle.
+Build with an ARM64 Java runtime for Apple Silicon Macs, or an x86-64 Java
+runtime for Intel Macs. The two macOS variants share library filenames,
+so a single build includes only one of them.
