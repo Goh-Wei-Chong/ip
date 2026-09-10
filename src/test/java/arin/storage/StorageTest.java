@@ -64,4 +64,17 @@ class StorageTest {
         assertTrue(Files.exists(taskFile));
         assertEquals(List.of(), Files.readAllLines(taskFile));
     }
+
+    @Test
+    void saveTasks_duplicateTasks_preservesOrderAndDuplicates() throws Exception {
+        Path taskFile = temporaryDirectory.resolve("arin.txt");
+        Task readBook = new Todo("read book");
+        readBook.markTask();
+        List<Task> tasks = List.of(readBook, new Todo("buy milk"), readBook);
+
+        new Storage(taskFile).saveTasks(tasks);
+
+        assertEquals(List.of("T | X | read book", "T |   | buy milk", "T | X | read book"),
+                Files.readAllLines(taskFile));
+    }
 }

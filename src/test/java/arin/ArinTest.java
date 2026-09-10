@@ -3,7 +3,9 @@ package arin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +44,43 @@ class ArinTest {
         List<Task> matchingTasks = Arin.findTasks(List.of(new Todo("read book")), "meeting");
 
         assertEquals(List.of(), matchingTasks);
+    }
+
+    @Test
+    void findTasks_emptyTaskList_returnsEmptyList() {
+        assertEquals(List.of(), Arin.findTasks(List.of(), "book"));
+    }
+
+    @Test
+    void findTasks_duplicateMatches_preservesOrderAndDuplicates() {
+        Task readBook = new Todo("read book");
+        Task returnBook = new Deadline("return book", LocalDate.of(2026, 6, 6));
+        List<Task> tasks = List.of(readBook, new Todo("buy milk"), returnBook, readBook);
+
+        assertEquals(List.of(readBook, returnBook, readBook), Arin.findTasks(tasks, "book"));
+    }
+
+    @Test
+    void findTasks_resultListChanged_doesNotChangeSourceList() {
+        Task readBook = new Todo("read book");
+        List<Task> tasks = new ArrayList<>(List.of(readBook));
+        List<Task> matchingTasks = Arin.findTasks(tasks, "book");
+
+        matchingTasks.clear();
+
+        assertEquals(List.of(readBook), tasks);
+    }
+
+    @Test
+    void findTasks_turkishDefaultLocale_preservesCaseInsensitiveMatching() {
+        Locale originalLocale = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+            Task writeReport = new Todo("WRITE report");
+
+            assertEquals(List.of(writeReport), Arin.findTasks(List.of(writeReport), "write"));
+        } finally {
+            Locale.setDefault(originalLocale);
+        }
     }
 }

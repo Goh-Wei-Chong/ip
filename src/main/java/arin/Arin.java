@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import arin.command.Command;
 import arin.command.ExitCommand;
@@ -80,14 +81,10 @@ public class Arin {
      * @return Tasks whose descriptions contain the keyword.
      */
     static List<Task> findTasks(List<Task> tasks, String keyword) {
-        List<Task> matchingTasks = new ArrayList<>();
         String lowercaseKeyword = keyword.toLowerCase(Locale.ROOT);
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase(Locale.ROOT).contains(lowercaseKeyword)) {
-                matchingTasks.add(task);
-            }
-        }
-        return matchingTasks;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(lowercaseKeyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
