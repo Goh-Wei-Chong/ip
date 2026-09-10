@@ -44,6 +44,11 @@ Run the generated JAR with Java 25:
 java -jar build/libs/arin-all.jar
 ```
 
+For development, use `java -ea -jar build/libs/arin-all.jar` to enable
+Java assertions. Gradle's `run` and `test` tasks enable them automatically.
+Assertions check internal assumptions about already validated task data;
+ordinary command errors are still handled through user-facing messages.
+
 The application opens a JavaFX window displaying `Hello World!`.
 JavaFX does not need to be installed separately, but Java 25 is required.
 
