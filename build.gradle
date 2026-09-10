@@ -20,6 +20,7 @@ java {
 
 application {
     mainClass = 'arin.Launcher'
+    applicationDefaultJvmArgs = ['-ea']
 }
 
 dependencies {
@@ -46,6 +47,7 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    enableAssertions = true
     // Existing regression checks are standalone Java programs, not JUnit methods.
     failOnNoDiscoveredTests = false
 }
