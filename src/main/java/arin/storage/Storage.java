@@ -3,7 +3,6 @@ package arin.storage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import arin.task.Task;
@@ -45,20 +44,9 @@ public class Storage {
             Files.createDirectories(parentDirectory);
         }
 
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(formatTask(task));
-        }
+        List<String> lines = tasks.stream()
+                .map(Task::storageToString)
+                .toList();
         Files.write(filePath, lines);
-    }
-
-    /**
-     * Converts a task to one line of the Level 7 storage format.
-     *
-     * @param task Task to format.
-     * @return Formatted task line.
-     */
-    private String formatTask(Task task) {
-        return task.storageToString();
     }
 }
