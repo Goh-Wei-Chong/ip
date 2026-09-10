@@ -16,6 +16,8 @@ public class Event extends Task {
      */
     public Event(String description, String start, String end) {
         super(description);
+        assert start != null && !start.isBlank() : "Event start times must be validated before construction";
+        assert end != null && !end.isBlank() : "Event end times must be validated before construction";
         this.start = start;
         this.end = end;
     }
