@@ -1,8 +1,6 @@
 package arin;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -10,15 +8,13 @@ import java.util.Locale;
 import arin.command.Command;
 import arin.command.ExitCommand;
 import arin.exception.ArinException;
+import arin.parser.TaskParser;
 import arin.storage.Storage;
-import arin.task.Deadline;
-import arin.task.Event;
 import arin.task.Task;
-import arin.task.Todo;
 import arin.ui.Ui;
 
 /**
- * A chatbot that echoes commands until the user ends the conversation.
+ * Coordinates task commands, console feedback, and persistent storage.
  */
 public class Arin {
     /**
@@ -65,7 +61,7 @@ public class Arin {
                     }
                     ui.showMatchingTasks(findTasks(tasks, keyword));
                 } else {
-                    Task task = createTask(command);
+                    Task task = TaskParser.parse(command);
                     tasks.add(task);
                     storage.saveTasks(tasks);
                     ui.showAddedTask(task, tasks.size());
@@ -74,64 +70,6 @@ public class Arin {
                 ui.showError(e.getMessage());
             }
         }
-    }
-
-    /**
-     * Creates a task from a valid task-creation command.
-     *
-     * @param command Command entered by the user.
-     * @return Task represented by the command.
-     * @throws ArinException If the command is unknown or missing required details.
-     */
-    private static Task createTask(String command) throws ArinException {
-        if (command.equals("todo") || command.startsWith("todo ")) {
-            String description = command.substring(4).trim();
-            if (description.isEmpty()) {
-                throw new ArinException("Please include a description after 'todo'.");
-            }
-            return new Todo(description);
-        }
-
-        if (command.equals("deadline") || command.startsWith("deadline ")) {
-            String details = command.substring(8).trim();
-            int byIndex = details.indexOf(" /by ");
-            if (byIndex == -1) {
-                throw new ArinException("Use: deadline <description> /by <date and time>.");
-            }
-
-            String description = details.substring(0, byIndex).trim();
-            String dateText = details.substring(byIndex + 5).trim();
-            if (description.isEmpty() || dateText.isEmpty()) {
-                throw new ArinException("A deadline needs both a description and a due date.");
-            }
-
-            try {
-                LocalDate date = LocalDate.parse(dateText);
-                return new Deadline(description, date);
-            } catch (DateTimeParseException e) {
-                throw new ArinException("Please use the date format yyyy-MM-dd, for example 2019-10-15.");
-            }
-        }
-
-        if (command.equals("event") || command.startsWith("event ")) {
-            String details = command.substring(5).trim();
-            int fromIndex = details.indexOf(" /from ");
-            int toIndex = details.indexOf(" /to ");
-            if (fromIndex == -1 || toIndex == -1 || toIndex < fromIndex) {
-                throw new ArinException("Use: event <description> /from <start> /to <end>.");
-            }
-
-            String description = details.substring(0, fromIndex).trim();
-            String start = details.substring(fromIndex + 7, toIndex).trim();
-            String end = details.substring(toIndex + 5).trim();
-            if (description.isEmpty() || start.isEmpty() || end.isEmpty()) {
-                throw new ArinException("An event needs a description, start time, and end time.");
-            }
-            return new Event(description, start, end);
-        }
-
-        throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, "
-                + "delete, find, or bye.");
     }
 
     /**
