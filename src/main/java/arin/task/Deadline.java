@@ -26,6 +26,15 @@ public class Deadline extends Task {
     }
 
     /**
+     * Returns the calendar date by which this task is due.
+     *
+     * @return Deadline date.
+     */
+    public LocalDate getDate() {
+        return date;
+    }
+
+    /**
      * Returns this deadline in the storage-file format, including its ISO date.
      *
      * @return Storage text prefixed with the deadline task type and date.
