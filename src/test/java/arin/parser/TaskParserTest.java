@@ -89,6 +89,6 @@ class TaskParserTest {
         ArinException exception = assertThrows(ArinException.class, () -> TaskParser.parse(command));
 
         assertEquals("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, "
-                + "delete, find, or bye.", exception.getMessage());
+                + "delete, find, sort, or bye.", exception.getMessage());
     }
 }

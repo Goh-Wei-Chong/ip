@@ -39,7 +39,7 @@ public final class TaskParser {
         }
 
         throw new ArinException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, "
-                + "delete, find, or bye.");
+                + "delete, find, sort, or bye.");
     }
 
     /**

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import arin.command.Command;
 import arin.command.ExitCommand;
+import arin.command.SortCommand;
 import arin.exception.ArinException;
 import arin.parser.TaskParser;
 import arin.storage.Storage;
@@ -40,6 +41,10 @@ public class Arin {
                     isExit = exitCommand.isExit();
                 } else if (command.equals("list")) {
                     ui.showTaskList(tasks);
+                } else if (command.equals("sort") || command.startsWith("sort ")) {
+                    String sortBy = command.substring("sort".length()).trim();
+                    Command sortCommand = new SortCommand(sortBy);
+                    sortCommand.execute(tasks, ui, storage);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskNumber = getTaskNumber(command, "mark", tasks.size());
                     tasks.get(taskNumber).markTask();

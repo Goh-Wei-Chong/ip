@@ -57,3 +57,46 @@ plus one macOS architecture selected from the Java runtime running Gradle.
 Build with an ARM64 Java runtime for Apple Silicon Macs, or an x86-64 Java
 runtime for Intel Macs. The two macOS variants share library filenames,
 so a single build includes only one of them.
+
+## Sorting tasks (C-Sort extension)
+
+The task commands currently run in the console, separately from the
+placeholder JavaFX window. After building the bundled JAR, start the console
+with Java 25:
+
+```bash
+java -ea -cp build/libs/arin-all.jar arin.Arin
+```
+
+Use either of these commands:
+
+- `sort name`: sort all tasks alphabetically by description, ignoring case.
+- `sort deadline`: put deadlines first, ordered from earliest to latest.
+  To-dos and events follow in their existing order. Event times are free text
+  and are not interpreted as deadline dates.
+
+Both commands keep ties in their current relative order and preserve task
+details and completion status. The sorted list is shown immediately and
+written to `data/arin.txt`. Task numbers change to match this order, so use
+the newly displayed numbers for `mark`, `unmark`, and `delete`. New tasks
+are still appended; run `sort` with an option again when needed.
+
+For example, enter these commands one at a time:
+
+```text
+todo buy milk
+deadline return book /by 2026-09-15
+deadline submit report /by 2026-09-11
+sort deadline
+mark 1
+sort name
+bye
+```
+
+After `sort deadline`, task 1 is `submit report`, task 2 is `return book`,
+and task 3 is `buy milk`. Thus, `mark 1` completes `submit report`.
+Missing or unsupported options (such as `sort` or `sort date`) produce a
+usage message without changing the list.
+
+This implements the course's
+[C-Sort extension](https://nus-cs2103-ay2627-s1.github.io/website/projectDuke/index.html#c-sort).
