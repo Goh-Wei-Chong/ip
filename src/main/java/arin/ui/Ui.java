@@ -65,12 +65,7 @@ public class Ui {
      * @param tasks Tasks to display.
      */
     public void showTaskList(List<Task> tasks) {
-        output.println(DIVIDER);
-        output.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            output.println((i + 1) + ". " + tasks.get(i));
-        }
-        output.println(DIVIDER);
+        showNumberedTasks("Here are the tasks in your list:", tasks);
     }
 
     /**
@@ -79,12 +74,7 @@ public class Ui {
      * @param matchingTasks Tasks that match the search keyword.
      */
     public void showMatchingTasks(List<Task> matchingTasks) {
-        output.println(DIVIDER);
-        output.println("Here are the matching tasks in your list:");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            output.println((i + 1) + ". " + matchingTasks.get(i));
-        }
-        output.println(DIVIDER);
+        showNumberedTasks("Here are the matching tasks in your list:", matchingTasks);
     }
 
     /**
@@ -150,6 +140,21 @@ public class Ui {
     public void showGoodbye() {
         output.println(DIVIDER);
         output.println("Bye. Hope to see you again soon!");
+        output.println(DIVIDER);
+    }
+
+    /**
+     * Displays a heading and numbered tasks using the shared list layout.
+     *
+     * @param heading Heading describing the displayed tasks.
+     * @param tasks Tasks to display in their existing order.
+     */
+    private void showNumberedTasks(String heading, List<Task> tasks) {
+        output.println(DIVIDER);
+        output.println(heading);
+        for (int i = 0; i < tasks.size(); i++) {
+            output.println((i + 1) + ". " + tasks.get(i));
+        }
         output.println(DIVIDER);
     }
 
